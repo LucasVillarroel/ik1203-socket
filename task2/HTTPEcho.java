@@ -5,7 +5,6 @@ public class HTTPEcho {
     public static void main( String[] args) throws IOException{
         int port = Integer.parseInt(args[0]);
         ServerSocket serverSocket = new ServerSocket(port);
-        System.out.println("Server started on port " + port);
         while(true){
             try(Socket cSocket = serverSocket.accept()){
                 String inLine;
