@@ -8,7 +8,7 @@ public class HTTPAsk {
         while(true){
             try(Socket clientSocket = serverSocket.accept()){
                 String[] par;
-                int port = 80;
+                Integer port = null;
                 String hostname = null;
                 String string = null;
                 StringBuilder res = new StringBuilder();
@@ -21,18 +21,18 @@ public class HTTPAsk {
                 
                 //read line from client
                 par = inFromClient.readLine().split("[\\s/?=&]+");
-                if(par[2].equals("ask")){
-                    for(int i = 0; i < (par.length -1); i++){
-                        if(par[i].equals("port"))
-                            port = Integer.parseInt(par[++i]);
-                        if(par[i].equals("hostname"))
-                            hostname = par[++i];
-                        if(par[i].equals("string")) 
-                            string = par[++i];
-                    }
+                for(int i = 0; i < (par.length -1); i++){
+                    if(par[i].equals("port"))
+                        port = Integer.parseInt(par[++i]);
+                    if(par[i].equals("hostname"))
+                        hostname = par[++i];
+                    if(par[i].equals("string")) 
+                        string = par[++i];
+                }
+                if(par[2].equals("ask") && (port != null) && (hostname != null)){
                     try{
                         res.append("HTTP/1.1 200 OK\r\n\r\n");
-                        res.append(TCPClient.askServer(hostname, port, string));
+                        res.append(TCPClient.askServer(hostname, port.intValue(), string));
                         outToClient.writeBytes(res.toString());
                         clientSocket.close();
                     }catch(UnknownHostException e){
