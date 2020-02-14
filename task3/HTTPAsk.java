@@ -21,22 +21,26 @@ public class HTTPAsk {
                 
                 //read line from client
                 par = inFromClient.readLine().split("[\\s/?=&]+");
-
-                for(int i = 0; i < (par.length -1); i++){
-                    if(par[i].equals("port"))
-                        port = Integer.parseInt(par[i+1]);
-                    if(par[i].equals("hostname"))
-                        hostname = par[i+1];
-                    if(par[i].equals("string")) 
-                        string = par[i+1];
-                }
-                try{
-                    res.append("HTTP/1.1 200 OK\r\n\r\n");
-                    res.append(TCPClient.askServer(hostname, port, string));
-                    outToClient.writeBytes(res.toString());
-                    clientSocket.close();
-                }catch(UnknownHostException e){
-                    outToClient.writeBytes("HTTP/1.1 404 Not Found\r\n\r\n");
+                if(par[2].equals("ask")){
+                    for(int i = 0; i < (par.length -1); i++){
+                        if(par[i].equals("port"))
+                            port = Integer.parseInt(par[++i]);
+                        if(par[i].equals("hostname"))
+                            hostname = par[++i];
+                        if(par[i].equals("string")) 
+                            string = par[++i];
+                    }
+                    try{
+                        res.append("HTTP/1.1 200 OK\r\n\r\n");
+                        res.append(TCPClient.askServer(hostname, port, string));
+                        outToClient.writeBytes(res.toString());
+                        clientSocket.close();
+                    }catch(UnknownHostException e){
+                        outToClient.writeBytes("HTTP/1.1 404 Not Found\r\n\r\n");
+                        clientSocket.close();
+                    }
+                }else{
+                    outToClient.writeBytes("HTTP/1.1 400 Bad Request\r\n\r\n");
                     clientSocket.close();
                 }
             }
