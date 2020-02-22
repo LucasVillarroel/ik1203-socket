@@ -1,13 +1,15 @@
 import java.net.*;
 import java.io.*;
 
-public class HTTPAsk {
-    public static void main( String[] args) throws Exception {
-        ServerSocket serverSocket = new ServerSocket(Integer.parseInt(args[0]));
+class MyRunnable implements Runnable{
+    Socket clientSocket = null;
+    public MyRunnable(Socket c){
+        this.clientSocket = c;
+    }
 
-        while(true){
-            try(Socket clientSocket = serverSocket.accept()){
-                String[] par;
+    public void run(){
+        try{
+            String[] par;
                 Integer port = null;
                 String hostname = null;
                 String string = null;
@@ -31,6 +33,11 @@ public class HTTPAsk {
                     if(par[i].equals("string")) 
                         string = par[++i];
                 }
+                try{
+                    Thread.sleep(5000);
+                }catch(InterruptedException e){
+
+                }
                 if((par[1].equals("ask") || par[2].equals("ask")) && (port != null) && (hostname != null)){
                     try{
                         res.append("HTTP/1.1 200 OK\r\n\r\n");
@@ -45,7 +52,8 @@ public class HTTPAsk {
                     outToClient.writeBytes("HTTP/1.1 400 Bad Request\r\n\r\n");
                     clientSocket.close();
                 }
-            }
+        }catch(IOException e){
+
         }
     }
 }

@@ -31,7 +31,6 @@ public class HTTPEcho {
                 cSocket.close();
 
             }catch(IOException e){
-                System.out.println("LOOOL");
             }
         }
     }
