@@ -32,11 +32,7 @@ class MyRunnable implements Runnable {
                 if (par[i].equals("string"))
                     string = par[++i];
             }
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-
-            }
+            
             if ((par[1].equals("ask") || par[2].equals("ask")) && (port != null) && (hostname != null)) {
                 try {
                     res.append("HTTP/1.1 200 OK\r\n\r\n");
